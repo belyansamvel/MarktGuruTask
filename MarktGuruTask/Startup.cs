@@ -1,3 +1,5 @@
+using MarktGuruTask.Repositories;
+using MarktGuruTask.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -30,6 +32,9 @@ namespace MarktGuruTask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<ProductContext>(options => options.UseSqlServer(connection));
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
@@ -47,6 +52,10 @@ namespace MarktGuruTask
                             ValidateIssuerSigningKey = true,
                         };
                     });
+
+            services.AddScoped<ProductContext>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ProductService>();
 
             services.AddControllers();
         }
