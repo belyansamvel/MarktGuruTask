@@ -37,5 +37,19 @@ namespace MarktGuruTask.Services
         {
             return await _productRepository.GetProductDetails(id);
         }
+
+        public async Task<Product> UpdateProduct(Product product)
+        {
+            try
+            {
+                await _productRepository.UpdateProduct(product);
+                var prod = await _productRepository.GetProductDetails(product.Id);
+                return prod;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

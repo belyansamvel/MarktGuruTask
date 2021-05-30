@@ -91,5 +91,35 @@ namespace MarktGuruTask.Controllers
 
             return new JsonResult(product);
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateProduct(ProductModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+
+            var entity = new Product
+            {
+                Available = model.Available,
+                Description = model.Description,
+                Id = model.Id,
+                Name = model.Name,
+                Price = model.Price,
+                DateCreated = model.DateCreated
+            };
+
+            try
+            {
+                var result = await _productService.UpdateProduct(entity);
+
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.GetBaseException().Message);
+            }
+        }
     }
 }

@@ -40,5 +40,18 @@ namespace MarktGuruTask.Repositories
         {
             return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
+
+        public async Task UpdateProduct(Product product)
+        {
+            try
+            {
+                _dbContext.Products.Update(product);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

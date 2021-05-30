@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MarktGuruTask
@@ -34,6 +35,36 @@ namespace MarktGuruTask
             });
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is BaseEntity);
+
+            foreach (var entry in entries)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Modified:
+                        entry.Property("DateCreated").IsModified = false;
+                        break;
+                    case EntityState.Added:
+                        ((BaseEntity)entry.Entity).DateCreated = DateTime.UtcNow;
+                        break;
+                    case EntityState.Detached:
+                        break;
+                    case EntityState.Unchanged:
+                        break;
+                    case EntityState.Deleted:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
