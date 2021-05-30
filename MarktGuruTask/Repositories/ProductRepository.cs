@@ -1,6 +1,5 @@
 ﻿using MarktGuruTask.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,6 +51,17 @@ namespace MarktGuruTask.Repositories
             {
                 throw;
             }
+        }
+
+        public async Task Delete(int id)
+        {
+            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product==null)
+            {
+                throw new KeyNotFoundException("Product does not exist");
+            }
+            _dbContext.Products.Remove(product);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
