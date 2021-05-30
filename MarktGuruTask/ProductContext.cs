@@ -29,6 +29,8 @@ namespace MarktGuruTask
 
                 entity.Property(e => e.Price)
                     .HasPrecision(9, 6);
+
+                entity.HasIndex(e => e.Name).IsUnique();
             });
 
             base.OnModelCreating(modelBuilder);

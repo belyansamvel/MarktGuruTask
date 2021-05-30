@@ -18,15 +18,27 @@ namespace MarktGuruTask.Repositories
 
         public async Task<Product> Add(Product product)
         {
-            await _dbContext.Products.AddAsync(product);
-            await _dbContext.SaveChangesAsync();
-            return product;
+            try
+            {
+                await _dbContext.Products.AddAsync(product);
+                await _dbContext.SaveChangesAsync();
+                return product;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Product>> GetProducts(int offset = 0, int count = 100)
         {
             var data = await _dbContext.Products.Skip(offset).Take(100).ToListAsync();
             return data;
+        }
+
+        public async Task<Product> GetProductDetails(int id)
+        {
+            return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
     }
 }
