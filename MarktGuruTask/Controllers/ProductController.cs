@@ -2,7 +2,6 @@
 using MarktGuruTask.Models;
 using MarktGuruTask.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -117,6 +116,26 @@ namespace MarktGuruTask.Controllers
                 return new JsonResult(result);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.GetBaseException().Message);
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (id < 1)
+            {
+                return BadRequest("Id cannot be less than 1");
+            }
+
+            try
+            {
+                await _productService.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
             {
                 return BadRequest(ex.GetBaseException().Message);
             }

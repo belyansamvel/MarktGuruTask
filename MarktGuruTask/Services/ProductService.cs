@@ -51,5 +51,17 @@ namespace MarktGuruTask.Services
                 throw;
             }
         }
+
+        public async Task Delete(int id)
+        {
+            try
+            {
+                await _productRepository.Delete(id);
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
