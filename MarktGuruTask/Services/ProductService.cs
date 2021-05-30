@@ -18,12 +18,24 @@ namespace MarktGuruTask.Services
 
         public async Task<Product> Add(Product product)
         {
-            return await _productRepository.Add(product);
+            try
+            {
+                return await _productRepository.Add(product);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Product>> GetProducts(int offset = 0, int count = 100)
         {
             return await _productRepository.GetProducts(offset, count);
+        }
+
+        public async Task<Product> GetProductDetails(int id)
+        {
+            return await _productRepository.GetProductDetails(id);
         }
     }
 }

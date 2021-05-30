@@ -10,5 +10,6 @@ namespace MarktGuruTask.Repositories
     {
         Task<Product> Add(Product product);
         Task<IEnumerable<Product>> GetProducts(int offset, int count);
+        Task<Product> GetProductDetails(int id);
     }
 }

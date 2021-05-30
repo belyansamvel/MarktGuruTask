@@ -28,7 +28,21 @@ namespace MarktGuruTask.Controllers
         public async Task<IActionResult> GetProducts([FromQuery] PaginationModel model)
         {
             var products = await _productService.GetProducts(model.Offset, model.Count);
-            return new JsonResult(products);
+
+            if (products == null || !products.Any())
+            {
+                return NotFound("There are no products yet");
+            }
+
+            var list = products.Select(p => new
+            {
+                p.Id,
+                p.Name,
+                p.Available,
+                p.Price
+            }).ToList();
+
+            return new JsonResult(list);
         }
 
         [HttpPost]
@@ -47,9 +61,35 @@ namespace MarktGuruTask.Controllers
                 Price = model.Price
             };
 
-            var result = await _productService.Add(entity);
+            try
+            {
+                var result = await _productService.Add(entity);
 
-            return new JsonResult(result);
+                return new JsonResult(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.GetBaseException().Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetDetails(int id)
+        {
+            if (id < 1)
+            {
+                return BadRequest("Id cannot be less than 1");
+            }
+
+            var product = await _productService.GetProductDetails(id);
+            if (product == null)
+            {
+                return NotFound("Product with the given Id does not exist");
+            }
+
+            return new JsonResult(product);
         }
     }
 }
