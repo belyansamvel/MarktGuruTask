@@ -53,7 +53,7 @@ namespace MarktGuruTask
                         };
                     });
 
-            services.AddScoped<ProductContext>();
+            //services.AddScoped<ProductContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ProductService>();
 

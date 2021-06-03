@@ -27,7 +27,7 @@ namespace MarktGuruTask.Controllers
             var identity = GetIdentity(model?.Username, model?.Password);
             if (identity == null)
             {
-                return BadRequest(new { errorText = "Invalid username or password." });
+                return Unauthorized("Invalid username or password."); // BadRequest(new { errorText =  });
             }
 
             var now = DateTime.UtcNow;

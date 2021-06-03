@@ -41,7 +41,7 @@ namespace MarktGuruTask.Controllers
                 p.Price
             }).ToList();
 
-            return new JsonResult(list);
+            return Ok(list);// new JsonResult(list);
         }
 
         [HttpPost]
